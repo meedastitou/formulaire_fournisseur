@@ -93,6 +93,27 @@ function saveReponseDetail($entete_id, $rfq_uuid, $ligne_cotation_id, $code_arti
         $date_livraison = date('Y-m-d H:i:s', strtotime('+' . intval($data['delai_livraison_jours']) . ' days'));
     }
 
+    // Gérer le commentaire selon la disponibilité
+    $commentaire = $data['commentaire'] ?? null;
+    $disponibilite = $data['disponibilite'] ?? 'oui';
+
+    // Si article non disponible, ajouter l'info au commentaire
+    if ($disponibilite === 'non') {
+        $prefixe = '[ARTICLE NON DISPONIBLE]';
+        if (!empty($commentaire)) {
+            $commentaire = $prefixe . ' ' . $commentaire;
+        } else {
+            $commentaire = $prefixe;
+        }
+    } elseif ($disponibilite === 'partielle') {
+        $prefixe = '[DISPONIBILITÉ PARTIELLE]';
+        if (!empty($commentaire)) {
+            $commentaire = $prefixe . ' ' . $commentaire;
+        } else {
+            $commentaire = $prefixe;
+        }
+    }
+
     $sql = "INSERT INTO reponses_fournisseurs_detail
             (reponse_entete_id, rfq_uuid, ligne_cotation_id, code_article,
              prix_unitaire_ht, date_livraison, quantite_disponible,
@@ -113,7 +134,7 @@ function saveReponseDetail($entete_id, $rfq_uuid, $ligne_cotation_id, $code_arti
         'marque_conforme' => isset($data['marque_conforme']) ? (int)$data['marque_conforme'] : 1,
         'marque_proposee' => $data['marque_proposee'] ?? null,
         'fichier' => $data['fichier_joint_url'] ?? null,
-        'commentaire' => $data['commentaire'] ?? null
+        'commentaire' => $commentaire
     ]);
 
     return $pdo->lastInsertId();

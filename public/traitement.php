@@ -199,13 +199,8 @@ try {
         throw new Exception("Échec enregistrement entête");
     }
 
-    // 2. Enregistrer chaque ligne de détail
+    // 2. Enregistrer chaque ligne de détail (y compris les non disponibles)
     foreach ($lignes_validees as $ligne) {
-        // Ne pas enregistrer les articles non disponibles sans info
-        if ($ligne['disponibilite'] === 'non' && empty($ligne['commentaire'])) {
-            continue;
-        }
-
         $detail_id = saveReponseDetail(
             $entete_id,
             $uuid,
