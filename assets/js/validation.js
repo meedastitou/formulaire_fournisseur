@@ -173,6 +173,36 @@ function toggleQuantitePartielle(index, value) {
         if (value === 'partielle') {
             qtyGroup.style.display = 'block';
             if (qtyInput) qtyInput.required = true;
+        } else if (value === 'oui') {
+            // For full availability, hide partial quantity and auto-fill with demanded quantity
+            qtyGroup.style.display = 'none';
+            if (qtyInput) {
+                qtyInput.required = false;
+                // Attempt to read the demanded quantity from the article info block
+                let demanded = null;
+                const ligneIdInput = document.querySelector('input[name="lignes[' + index + '][ligne_id]"]');
+                if (ligneIdInput) {
+                    const section = ligneIdInput.closest('.form-section');
+                    if (section) {
+                        const info = section.querySelector('.alert-warning');
+                        if (info) {
+                            const match = info.textContent.match(/Quantité demandée:\s*([\d\s.,]+)/i);
+                            if (match && match[1]) {
+                                let numStr = match[1].trim().replace(/\s/g, '');
+                                numStr = numStr.replace(',', '.');
+                                const parsed = parseFloat(numStr);
+                                if (!isNaN(parsed)) demanded = parsed;
+                            }
+                        }
+                    }
+                }
+
+                if (demanded !== null) {
+                    qtyInput.value = demanded;
+                } else {
+                    qtyInput.value = '';
+                }
+            }
         } else {
             qtyGroup.style.display = 'none';
             if (qtyInput) {
