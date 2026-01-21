@@ -62,12 +62,12 @@ function isAlreadyResponded($rfq_uuid) {
 /**
  * Enregistrer l'entête de la réponse fournisseur
  */
-function saveReponseEntete($rfq_uuid, $reference_fournisseur, $fichier_devis_url, $devise, $commentaire) {
+function saveReponseEntete($rfq_uuid, $reference_fournisseur, $fichier_devis_url, $devise, $commentaire, $methodes_paiement = null) {
     $pdo = getDBConnection();
 
     $sql = "INSERT INTO reponses_fournisseurs_entete
-            (rfq_uuid, reference_fournisseur, fichier_devis_url, devise, date_reponse, commentaire)
-            VALUES (:rfq_uuid, :ref, :fichier, :devise, NOW(), :commentaire)";
+            (rfq_uuid, reference_fournisseur, fichier_devis_url, devise, methodes_paiement, date_reponse, commentaire)
+            VALUES (:rfq_uuid, :ref, :fichier, :devise, :methodes_paiement, NOW(), :commentaire)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -75,6 +75,7 @@ function saveReponseEntete($rfq_uuid, $reference_fournisseur, $fichier_devis_url
         'ref' => $reference_fournisseur,
         'fichier' => $fichier_devis_url,
         'devise' => $devise,
+        'methodes_paiement' => $methodes_paiement,
         'commentaire' => $commentaire
     ]);
 

@@ -64,6 +64,7 @@ if (isAlreadyResponded($uuid)) {
 
 $reference_fournisseur = isset($_POST['reference_fournisseur']) ? cleanInput($_POST['reference_fournisseur']) : null;
 $devise = isset($_POST['devise']) ? cleanInput($_POST['devise']) : 'MAD';
+$methodes_paiement = isset($_POST['methodes_paiement']) ? cleanInput($_POST['methodes_paiement']) : null;
 $commentaire_global = isset($_POST['commentaire_global']) ? cleanInput($_POST['commentaire_global']) : null;
 
 // Validation devise
@@ -192,7 +193,8 @@ try {
         $reference_fournisseur,
         $fichier_devis_url,
         $devise,
-        $commentaire_global
+        $commentaire_global,
+        $methodes_paiement
     );
 
     if (!$entete_id) {

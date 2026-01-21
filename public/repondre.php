@@ -151,6 +151,21 @@ try {
                     </select>
                 </div>
 
+                <!-- Méthodes de paiement -->
+                <div class="form-group">
+                    <label for="methodes_paiement">
+                        Méthodes de paiement acceptées
+                    </label>
+                    <input
+                        type="text"
+                        id="methodes_paiement"
+                        name="methodes_paiement"
+                        placeholder="Ex: Chèque, Virement, Crédit client"
+                        maxlength="255"
+                    >
+                    <small>Optionnel - Indiquez les modes de paiement que vous acceptez</small>
+                </div>
+
                 <!-- Fichier devis -->
                 <div class="form-group">
                     <label for="fichier_devis">
