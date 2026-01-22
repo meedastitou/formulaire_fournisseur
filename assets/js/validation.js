@@ -10,6 +10,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const loading = document.getElementById('loading');
 
     // ──────────────────────────────────────────────────────────
+    // AUTO-REMPLISSAGE QUANTITÉ DISPONIBLE AU CHARGEMENT
+    // ──────────────────────────────────────────────────────────
+    
+    // Remplir les champs si "oui" est sélectionné par défaut
+    const radios = document.querySelectorAll('input[name^="lignes["][name$="[disponibilite]"]');
+    radios.forEach(radio => {
+        if (radio.value === 'oui' && radio.checked) {
+            const match = radio.name.match(/lignes\[(\d+)\]/);
+            if (match) {
+                const index = match[1];
+                toggleQuantitePartielle(index, 'oui');
+            }
+        }
+    });
+
+    // ──────────────────────────────────────────────────────────
     // SOUMISSION DU FORMULAIRE
     // ──────────────────────────────────────────────────────────
 
