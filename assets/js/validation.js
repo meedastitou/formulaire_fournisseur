@@ -175,7 +175,13 @@ function toggleQuantitePartielle(index, value) {
             // Remplissage automatique avec quantité demandée
             qtyGroup.style.display = 'none';
             if (qtyInput && quantiteDemandeeInput) {
-                qtyInput.value = quantiteDemandeeInput.value;
+                let demandedValue = quantiteDemandeeInput.value;
+                // Parser le nombre (gérer les formats français avec virgule)
+                if (demandedValue) {
+                    demandedValue = String(demandedValue).replace(',', '.');
+                    demandedValue = parseFloat(demandedValue) || '';
+                }
+                qtyInput.value = demandedValue;
                 qtyInput.required = false;
             }
         } else if (value === 'partielle') {
