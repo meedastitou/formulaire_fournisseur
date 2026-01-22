@@ -26,6 +26,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ──────────────────────────────────────────────────────────
+    // AUTO-AFFICHAGE/MASQUAGE MARQUE PROPOSÉE AU CHARGEMENT
+    // ──────────────────────────────────────────────────────────
+
+    const marqueRadios = document.querySelectorAll('input[name^="lignes["][name$="[marque_conforme]"]');
+    marqueRadios.forEach(radio => {
+        const match = radio.name.match(/lignes\[(\d+)\]/);
+        if (match) {
+            const index = match[1];
+            const checkedRadio = document.querySelector('input[name="lignes[' + index + '][marque_conforme]"]:checked');
+            if (checkedRadio) {
+                const isConforme = checkedRadio.value === '1';
+                toggleMarqueAlternative(index, isConforme);
+            }
+        }
+    });
+
+    // ──────────────────────────────────────────────────────────
     // SOUMISSION DU FORMULAIRE
     // ──────────────────────────────────────────────────────────
 
