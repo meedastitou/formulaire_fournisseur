@@ -1,0 +1,110 @@
+{
+  "name": "Proxy Repondre GET",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "repondre-proxy",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 250],
+      "webhookId": "repondre-proxy-get"
+    },
+    {
+      "parameters": {
+        "jsCode": "const query = $input.item.json.query || $input.item.json;\nconst uuid = query.uuid;\nconst t = query.t;\nconst sig = query.sig;\n\nif (!uuid || !t || !sig) {\n  throw new Error('Paramètres manquants: uuid, t ou sig');\n}\n\nreturn [{ json: { uuid, t, sig } }];"
+      },
+      "name": "Validate Token",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 250]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ 'http://192.168.1.211/formulaire_fournisseur/public/repondre.php?uuid=' + $json.uuid }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "name": "Fetch Internal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [690, 250]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.data }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-cache, no-store, must-revalidate"
+              }
+            ]
+          }
+        }
+      },
+      "name": "Respond HTML",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [910, 250]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Token",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Token": {
+      "main": [
+        [
+          {
+            "node": "Fetch Internal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Internal": {
+      "main": [
+        [
+          {
+            "node": "Respond HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1",
+  "tags": []
+}

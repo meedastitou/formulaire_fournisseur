@@ -129,7 +129,7 @@ foreach ($lignes as $index => $ligne) {
         continue;
     }
 
-    // Quantité disponible si partielle
+    // Quantité disponible (pour 'oui' ou 'partielle')
     $quantite_disponible = null;
     if ($disponibilite === 'partielle') {
         $quantite_disponible = isset($ligne['quantite_disponible']) ? floatval($ligne['quantite_disponible']) : null;
@@ -137,6 +137,9 @@ foreach ($lignes as $index => $ligne) {
             $erreurs[] = "Article " . ($index + 1) . ": Quantité disponible invalide";
             continue;
         }
+    } elseif ($disponibilite === 'oui') {
+        // Si disponible totale, récupérer quantité_disponible (auto-remplie)
+        $quantite_disponible = isset($ligne['quantite_disponible']) ? floatval($ligne['quantite_disponible']) : null;
     } elseif ($disponibilite === 'non') {
         // Si non disponible, on met les valeurs à null
         $prix_ht = null;

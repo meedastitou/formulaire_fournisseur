@@ -222,6 +222,9 @@ try {
                     <?php endif; ?>
                 </div>
                 
+                <!-- Quantité demandée (caché pour remplissage auto JS) -->
+                <input type="hidden" id="quantite_demandee_<?= $index ?>" value="<?= $ligne['quantite_demandee'] ?>" />
+                
                 <!-- Prix unitaire HT -->
                 <div class="form-group">
                     <label for="prix_<?= $index ?>">

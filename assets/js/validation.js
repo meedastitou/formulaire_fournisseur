@@ -163,47 +163,30 @@ document.addEventListener('DOMContentLoaded', function() {
 // ════════════════════════════════════════════════════════════
 
 /**
- * Afficher/masquer le champ quantité partielle
+ * Afficher/masquer le champ quantité partielle et remplissage auto si "oui"
  */
 function toggleQuantitePartielle(index, value) {
     const qtyGroup = document.getElementById('qty_group_' + index);
     const qtyInput = document.getElementById('qty_' + index);
+    const quantiteDemandeeInput = document.getElementById('quantite_demandee_' + index);
 
     if (qtyGroup) {
-        if (value === 'partielle') {
-            qtyGroup.style.display = 'block';
-            if (qtyInput) qtyInput.required = true;
-        } else if (value === 'oui') {
-            // For full availability, hide partial quantity and auto-fill with demanded quantity
+        if (value === 'oui') {
+            // Remplissage automatique avec quantité demandée
             qtyGroup.style.display = 'none';
-            if (qtyInput) {
+            if (qtyInput && quantiteDemandeeInput) {
+                qtyInput.value = quantiteDemandeeInput.value;
                 qtyInput.required = false;
-                // Attempt to read the demanded quantity from the article info block
-                let demanded = null;
-                const ligneIdInput = document.querySelector('input[name="lignes[' + index + '][ligne_id]"]');
-                if (ligneIdInput) {
-                    const section = ligneIdInput.closest('.form-section');
-                    if (section) {
-                        const info = section.querySelector('.alert-warning');
-                        if (info) {
-                            const match = info.textContent.match(/Quantité demandée:\s*([\d\s.,]+)/i);
-                            if (match && match[1]) {
-                                let numStr = match[1].trim().replace(/\s/g, '');
-                                numStr = numStr.replace(',', '.');
-                                const parsed = parseFloat(numStr);
-                                if (!isNaN(parsed)) demanded = parsed;
-                            }
-                        }
-                    }
-                }
-
-                if (demanded !== null) {
-                    qtyInput.value = demanded;
-                } else {
-                    qtyInput.value = '';
-                }
+            }
+        } else if (value === 'partielle') {
+            // Afficher le champ pour saisie manuelle
+            qtyGroup.style.display = 'block';
+            if (qtyInput) {
+                qtyInput.required = true;
+                qtyInput.value = '';
             }
         } else {
+            // "non" disponible
             qtyGroup.style.display = 'none';
             if (qtyInput) {
                 qtyInput.required = false;
