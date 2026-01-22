@@ -169,19 +169,22 @@ function toggleQuantitePartielle(index, value) {
     const qtyGroup = document.getElementById('qty_group_' + index);
     const qtyInput = document.getElementById('qty_' + index);
     const quantiteDemandeeInput = document.getElementById('quantite_demandee_' + index);
-
+    console.log('Toggle quantité partielle pour index', index, 'avec valeur', value);
+    console.log('Quantité demandée input:', quantiteDemandeeInput.value);
     if (qtyGroup) {
         if (value === 'oui') {
             // Remplissage automatique avec quantité demandée
             qtyGroup.style.display = 'none';
             if (qtyInput && quantiteDemandeeInput) {
                 let demandedValue = quantiteDemandeeInput.value;
+                console.log('Quantité demandée:', demandedValue);
                 // Parser le nombre (gérer les formats français avec virgule)
                 if (demandedValue) {
                     demandedValue = String(demandedValue).replace(',', '.');
                     demandedValue = parseFloat(demandedValue) || '';
                 }
                 qtyInput.value = demandedValue;
+                console.log('Quantité remplie automatiquement:', qtyInput.value);
                 qtyInput.required = false;
             }
         } else if (value === 'partielle') {
