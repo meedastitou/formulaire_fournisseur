@@ -1,0 +1,57 @@
+13:35:39 | === DÉBUT TRAITEMENT ===
+13:35:39 | POST keys | ["uuid","reference_fournisseur","devise","methodes_paiement","commentaire_global","lignes"]
+13:35:39 | lignes existe? | "OUI"
+13:35:39 | lignes type | "array"
+13:35:39 | lignes count | 4
+13:35:39 | Inclusion functions.php...
+13:35:39 | functions.php inclus OK
+13:35:39 | Méthode POST OK
+13:35:39 | UUID reçu | "96a24958-8cf2-4bac-9e1c-1ffd1b3e3582"
+13:35:39 | UUID valide OK
+13:35:39 | Recherche RFQ...
+13:35:40 | RFQ trouvée | {"numero":"RFQ-2026-0127043253-96A2","fournisseur":"T3892"}
+13:35:40 | Vérification si déjà répondu...
+13:35:41 | Pas encore répondu OK
+13:35:41 | Données entête | {"reference_fournisseur":"","devise":"MAD"}
+13:35:41 | Upload fichier ignoré pour debug
+13:35:41 | Récupération lignes...
+13:35:41 | Lignes reçues | {"type":"array","count":4}
+13:35:41 | Ligne 0 | {"ligne_id":"473","code_article":"A09474","disponibilite":"non","quantite_disponible":"","marque_conforme":"1","marque_proposee":"","reference_fournisseur":"","commentaire":""}
+13:35:41 | Ligne 1 | {"ligne_id":"474","code_article":"A03295","disponibilite":"non","quantite_disponible":"","marque_conforme":"1","marque_proposee":"","reference_fournisseur":"","commentaire":""}
+13:35:41 | Ligne 2 | {"ligne_id":"475","code_article":"A07585","disponibilite":"non","quantite_disponible":"","marque_conforme":"1","marque_proposee":"","reference_fournisseur":"","commentaire":""}
+13:35:41 | Ligne 3 | {"ligne_id":"476","code_article":"A12014","disponibilite":"non","quantite_disponible":"","marque_conforme":"1","marque_proposee":"","reference_fournisseur":"","commentaire":""}
+13:35:41 | Validation des lignes...
+13:35:41 | Validation ligne 0 | {"ligne_id":473,"code_article":"A09474","disponibilite":"non","prix_ht":null,"delai":null}
+13:35:41 | Ligne 0 validée OK
+13:35:41 | Validation ligne 1 | {"ligne_id":474,"code_article":"A03295","disponibilite":"non","prix_ht":null,"delai":null}
+13:35:41 | Ligne 1 validée OK
+13:35:41 | Validation ligne 2 | {"ligne_id":475,"code_article":"A07585","disponibilite":"non","prix_ht":null,"delai":null}
+13:35:41 | Ligne 2 validée OK
+13:35:41 | Validation ligne 3 | {"ligne_id":476,"code_article":"A12014","disponibilite":"non","prix_ht":null,"delai":null}
+13:35:41 | Ligne 3 validée OK
+13:35:41 | Lignes validées | 4
+13:35:41 | Erreurs | 0
+13:35:41 | === DÉBUT ENREGISTREMENT BDD ===
+13:35:42 | Connexion BDD OK
+13:35:42 | Transaction démarrée
+13:35:42 | Enregistrement entête...
+13:35:43 | Entête enregistrée | {"entete_id":"20"}
+13:35:43 | Enregistrement détails...
+13:35:43 | Enregistrement détail 0 | {"entete_id":"20","ligne_id":473,"code_article":"A09474"}
+13:35:44 | Résultat saveReponseDetail | {"detail_id":"71","type":"string"}
+13:35:44 | Détail 0 enregistré OK | {"detail_id":"71"}
+13:35:44 | Enregistrement détail 1 | {"entete_id":"20","ligne_id":474,"code_article":"A03295"}
+13:35:45 | Résultat saveReponseDetail | {"detail_id":"72","type":"string"}
+13:35:45 | Détail 1 enregistré OK | {"detail_id":"72"}
+13:35:45 | Enregistrement détail 2 | {"entete_id":"20","ligne_id":475,"code_article":"A07585"}
+13:35:46 | Résultat saveReponseDetail | {"detail_id":"73","type":"string"}
+13:35:46 | Détail 2 enregistré OK | {"detail_id":"73"}
+13:35:46 | Enregistrement détail 3 | {"entete_id":"20","ligne_id":476,"code_article":"A12014"}
+13:35:47 | Résultat saveReponseDetail | {"detail_id":"74","type":"string"}
+13:35:47 | Détail 3 enregistré OK | {"detail_id":"74"}
+13:35:47 | Détails enregistrés | "4 \/ 4"
+13:35:47 | Mise à jour statut RFQ...
+13:35:48 | Statut RFQ mis à jour
+13:35:48 | Transaction COMMIT OK
+13:35:48 | === SUCCÈS COMPLET === | {"entete_id":"20","nb_details":4}
+13:35:48 | === FIN TRAITEMENT ===

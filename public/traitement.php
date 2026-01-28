@@ -5,6 +5,17 @@
  * ════════════════════════════════════════════════════════════
  */
 
+// ──────────────────────────────────────────────────────────
+// FIX: Parser php://input si $_POST est vide
+// (Nécessaire quand le header Content-Type est manquant - ex: n8n)
+// ──────────────────────────────────────────────────────────
+if (empty($_POST) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $rawInput = file_get_contents('php://input');
+    if (!empty($rawInput)) {
+        parse_str($rawInput, $_POST);
+    }
+}
+
 require_once __DIR__ . '/../includes/functions.php';
 
 // ──────────────────────────────────────────────────────────
@@ -27,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // ──────────────────────────────────────────────────────────
 // RÉCUPÉRATION ET VALIDATION UUID
 // ──────────────────────────────────────────────────────────
-
 $uuid = isset($_POST['uuid']) ? cleanInput($_POST['uuid']) : '';
 
 if (empty($uuid) || !isValidUUID($uuid)) {
@@ -35,6 +45,7 @@ if (empty($uuid) || !isValidUUID($uuid)) {
     header('Location: erreur.php?code=invalid_uuid');
     exit;
 }
+
 
 // ──────────────────────────────────────────────────────────
 // VÉRIFICATION RFQ EXISTE
@@ -86,7 +97,6 @@ if (isset($_FILES['fichier_devis']) && $_FILES['fichier_devis']['error'] === UPL
             'uuid' => $uuid,
             'file' => $_FILES['fichier_devis']['name']
         ]);
-        // On continue même si l'upload échoue (fichier optionnel)
         $fichier_devis_url = null;
     }
 }
@@ -138,10 +148,8 @@ foreach ($lignes as $index => $ligne) {
             continue;
         }
     } elseif ($disponibilite === 'oui') {
-        // Si disponible totale, récupérer quantité_disponible (auto-remplie)
         $quantite_disponible = isset($ligne['quantite_disponible']) ? floatval($ligne['quantite_disponible']) : null;
     } elseif ($disponibilite === 'non') {
-        // Si non disponible, on met les valeurs à null
         $prix_ht = null;
         $delai = null;
     }
@@ -204,7 +212,7 @@ try {
         throw new Exception("Échec enregistrement entête");
     }
 
-    // 2. Enregistrer chaque ligne de détail (y compris les non disponibles)
+    // 2. Enregistrer chaque ligne de détail
     foreach ($lignes_validees as $ligne) {
         $detail_id = saveReponseDetail(
             $entete_id,
@@ -243,30 +251,7 @@ try {
         'entete_id' => $entete_id
     ]);
 
-    // 6. Envoyer webhook à n8n
-    $webhookData = [
-        'event' => 'reponse_fournisseur',
-        'uuid' => $uuid,
-        'numero_rfq' => $rfq['numero_rfq'],
-        'code_fournisseur' => $rfq['code_fournisseur'],
-        'nom_fournisseur' => $rfq['nom_fournisseur'],
-        'entete_id' => $entete_id,
-        'devise' => $devise,
-        'nb_lignes' => count($lignes_validees),
-        'date_reponse' => date('Y-m-d H:i:s'),
-        'ip' => getClientIP()
-    ];
-
-    $webhookResult = sendWebhookToN8n($webhookData);
-
-    if (!$webhookResult['success']) {
-        logSystem('warning', 'formulaire_php', 'webhook_n8n', 'Échec envoi webhook', [
-            'uuid' => $uuid,
-            'http_code' => $webhookResult['http_code']
-        ]);
-    }
-
-    // 7. Redirection vers succès
+    // 6. Redirection vers succès
     header('Location: succes.php?uuid=' . urlencode($uuid));
     exit;
 
@@ -292,30 +277,24 @@ try {
  * Gérer l'upload d'un fichier
  */
 function handleFileUpload($file, $uuid, $type) {
-    // Vérifier taille
     if ($file['size'] > MAX_FILE_SIZE) {
         return false;
     }
 
-    // Vérifier extension
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     if (!in_array($extension, ALLOWED_EXTENSIONS)) {
         return false;
     }
 
-    // Créer dossier si nécessaire
     $uploadDir = UPLOAD_DIR . date('Y/m/');
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0755, true);
     }
 
-    // Générer nom unique
     $filename = $type . '_' . $uuid . '_' . time() . '.' . $extension;
     $filepath = $uploadDir . $filename;
 
-    // Déplacer fichier
     if (move_uploaded_file($file['tmp_name'], $filepath)) {
-        // Retourner chemin relatif pour stockage en BDD
         return 'uploads/' . date('Y/m/') . $filename;
     }
 

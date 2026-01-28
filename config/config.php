@@ -7,10 +7,10 @@
 
 // Configuration site
 define('SITE_NAME', 'Flux Achat Portal');
-define('SITE_URL', 'https://votre-domaine.com'); // ⚠️ À MODIFIER
+define('SITE_URL', 'https://bjaai.jbel-annour.site'); // ⚠️ À MODIFIER
 
 // Configuration n8n webhook
-define('N8N_WEBHOOK_URL', 'https://votre-n8n.com/webhook/reponse-fournisseur'); // ⚠️ À MODIFIER
+define('N8N_WEBHOOK_URL', 'https://bjaai.jbel-annour.site/webhook/proxy-formulaire/formulaire'); // ⚠️ À MODIFIER
 
 // Configuration email
 define('EMAIL_RESPONSABLE', 'achat@votresociete.com'); // ⚠️ À MODIFIER
